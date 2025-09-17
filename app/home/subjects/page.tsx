@@ -4,19 +4,24 @@ import React, { useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Save, X, Upload } from "lucide-react"
 
+type SubjectType = "core" | "elective" | "practical" | "apprenticeship"
+
 type Subject = {
   id: string
   subjectId: string
   name: string
+  type: SubjectType
 }
 
 const DEFAULT_SUBJECTS: Subject[] = [
-  { id: "s1", subjectId: "SUB001", name: "Data Structures" },
-  { id: "s2", subjectId: "SUB002", name: "Algorithms" },
-  { id: "s3", subjectId: "SUB003", name: "Operating Systems" },
-  { id: "s4", subjectId: "SUB004", name: "Database Systems" },
-  { id: "s5", subjectId: "SUB005", name: "Computer Networks" },
+  { id: "s1", subjectId: "SUB001", name: "Data Structures", type: "core" },
+  { id: "s2", subjectId: "SUB002", name: "Algorithms", type: "core" },
+  { id: "s3", subjectId: "SUB003", name: "Operating Systems", type: "core" },
+  { id: "s4", subjectId: "SUB004", name: "Database Systems", type: "elective" },
+  { id: "s5", subjectId: "SUB005", name: "Computer Networks", type: "practical" },
 ]
+
+const SUBJECT_TYPES: SubjectType[] = ["core", "elective", "practical", "apprenticeship"]
 
 export default function SubjectsPage() {
   const [saved, setSaved] = useState<Subject[]>(() => DEFAULT_SUBJECTS.map((s) => ({ ...s })))
@@ -30,7 +35,7 @@ export default function SubjectsPage() {
   }
 
   function addRow() {
-    const newRow: Subject = { id: `s_${Date.now()}_${Math.floor(Math.random() * 1000)}`, subjectId: "", name: "" }
+    const newRow: Subject = { id: `s_${Date.now()}_${Math.floor(Math.random() * 1000)}`, subjectId: "", name: "", type: "core" }
     setRows((prev) => [newRow, ...prev])
   }
 
@@ -51,6 +56,12 @@ export default function SubjectsPage() {
     fileInputRef.current?.click()
   }
 
+  function normalizeType(val: any): SubjectType {
+    const s = String(val ?? "").trim().toLowerCase()
+    if (s === "core" || s === "elective" || s === "practical" || s === "apprenticeship") return s as SubjectType
+    return "core"
+  }
+
   function parseCSV(text: string): Subject[] {
     const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
     if (lines.length === 0) return []
@@ -58,13 +69,15 @@ export default function SubjectsPage() {
     const idx = {
       subjectId: headers.findIndex((h) => ["subjectid", "subject id", "subject_id", "id"].includes(h)),
       name: headers.findIndex((h) => ["name", "title"].includes(h)),
+      type: headers.findIndex((h) => ["type", "subject type"].includes(h)),
     }
     const rowsOut: Subject[] = []
     for (let i = 1; i < lines.length; i++) {
       const cols = lines[i].split(",").map((c) => c.trim())
       const subjectId = cols[idx.subjectId] ?? ""
       const name = cols[idx.name] ?? ""
-      rowsOut.push({ id: `imp_sub_${Date.now()}_${i}`, subjectId, name })
+      const type = idx.type >= 0 ? normalizeType(cols[idx.type]) : "core"
+      rowsOut.push({ id: `imp_sub_${Date.now()}_${i}`, subjectId, name, type })
     }
     return rowsOut
   }
@@ -84,6 +97,7 @@ export default function SubjectsPage() {
           id: item.id ?? `imp_json_sub_${Date.now()}_${i}`,
           subjectId: item.subjectId ?? item.subject_id ?? item.id ?? "",
           name: item.name ?? item.title ?? "",
+          type: normalizeType(item.type ?? item.subjectType ?? item.subject_type),
         }))
         setRows(mapped)
       } else if (name.endsWith(".csv")) {
@@ -128,6 +142,7 @@ export default function SubjectsPage() {
               <th className="px-4 py-3 w-16">S.No</th>
               <th className="px-4 py-3">Subject ID</th>
               <th className="px-4 py-3">Name</th>
+              <th className="px-4 py-3">Type</th>
               <th className="px-4 py-3 w-32">Actions</th>
             </tr>
           </thead>
@@ -152,6 +167,19 @@ export default function SubjectsPage() {
                   />
                 </td>
                 <td className="px-4 py-3">
+                  <select
+                    value={r.type}
+                    onChange={(e) => updateRow(r.id, "type", e.target.value)}
+                    className="w-full bg-transparent outline-none"
+                  >
+                    {SUBJECT_TYPES.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" onClick={() => deleteRow(r.id)} className="p-2">
                       <Trash2 className="h-4 w-4 text-destructive" />
@@ -162,7 +190,7 @@ export default function SubjectsPage() {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-muted-foreground">
+                <td colSpan={5} className="px-4 py-6 text-center text-muted-foreground">
                   No subjects. Use "Add Subject" to create one.
                 </td>
               </tr>
