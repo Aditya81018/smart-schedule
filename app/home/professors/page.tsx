@@ -62,9 +62,9 @@ export default function ProfessorsPage() {
     if (lines.length === 0) return []
     const headers = lines[0].split(",").map((h) => h.trim().toLowerCase())
     const idx = {
-      facultyId: headers.findIndex((h) => ["facultyid", "faculty id", "faculty_id", "id"].includes(h)),
-      name: headers.findIndex((h) => ["name", "full name"].includes(h)),
-      expertise: headers.findIndex((h) => ["expertise", "discipline", "department"].includes(h)),
+      facultyId: headers.findIndex((h) => ["id"].includes(h)),
+      name: headers.findIndex((h) => ["name"].includes(h)),
+      expertise: headers.findIndex((h) => ["expertise"].includes(h)),
     }
     const rowsOut: Professor[] = []
     for (let i = 1; i < lines.length; i++) {
