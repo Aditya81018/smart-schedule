@@ -169,7 +169,7 @@ export default function SubjectsPage() {
                 </td>
                 <td className="px-4 py-3">
                   <Select
-                    className="w-64"
+                    className="w-32"
                     value={r.type}
                     onChange={(v) => updateRow(r.id, "type", v)}
                     options={SUBJECT_TYPES.map((t) => ({ value: t, label: t }))}
