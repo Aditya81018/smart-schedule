@@ -7,14 +7,14 @@ import { AppSidebar } from "@/components/app-sidebar"
 export function HomeShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
-  useEffect(() => {
-    try {
-      const ok = typeof window !== "undefined" && localStorage.getItem("isAuthenticated") === "true"
-      if (!ok) router.replace("/auth/login")
-    } catch {
-      router.replace("/auth/login")
-    }
-  }, [router])
+  // useEffect(() => {
+  //   try {
+  //     const ok = typeof window !== "undefined" && localStorage.getItem("isAuthenticated") === "true"
+  //     if (!ok) router.replace("/auth/login")
+  //   } catch {
+  //     router.replace("/auth/login")
+  //   }
+  // }, [router])
 
   return (
     <div className="min-h-screen flex">
