@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { LogOut, Home, Info, File, Users } from "lucide-react"
+import { LogOut, Home, Info, File, Users, BookOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
 
@@ -24,6 +24,7 @@ export function AppSidebar() {
     { href: "/home", label: "Home", icon: Home },
     { href: "/home/about", label: "About College", icon: Info },
     { href: "/home/professors", label: "Professors", icon: Users },
+    { href: "/home/subjects", label: "Subjects", icon: BookOpen },
     { href: "/home/blank", label: "Blank Page", icon: File },
   ]
 
