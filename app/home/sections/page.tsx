@@ -168,9 +168,7 @@ export default function SectionsPage() {
                   />
                 </td>
                 <td className="px-4 py-3">
-                  <Button variant="ghost" onClick={() => console.log('view subjects', r.subjects)} className="text-sm">
-                    View subjects
-                  </Button>
+                  <ViewSubjectsButton subjects={r.subjects} sectionId={r.id} />
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
