@@ -92,7 +92,7 @@ export default function ProfessorsPage() {
           id: item.id ?? `imp_json_${Date.now()}_${i}`,
           facultyId: item.id ?? "",
           name: item.name ?? "",
-          expertise: item.expertise ?? "",
+          expertise: item.expertise.join(", ") ?? "",
         }))
         setRows(mapped)
       } else if (name.endsWith(".csv")) {
