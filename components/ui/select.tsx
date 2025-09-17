@@ -17,9 +17,11 @@ export function Select({
   className?: string
 }) {
   const [open, setOpen] = React.useState(false)
+  const [mounted, setMounted] = React.useState(false)
   const ref = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
+    setMounted(true)
     function onDoc(e: MouseEvent) {
       if (!ref.current) return
       if (!ref.current.contains(e.target as Node)) setOpen(false)
@@ -29,6 +31,24 @@ export function Select({
   }, [])
 
   const selectedLabel = options.find((o) => o.value === value)?.label ?? ""
+
+  // Render a native select initially (matches server-rendered markup) and switch to custom UI after mount
+  if (!mounted) {
+    return (
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={cn("w-full bg-transparent outline-none rounded-md border border-input px-3 py-1.5 text-sm", className)}
+        aria-hidden
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    )
+  }
 
   return (
     <div ref={ref} className={cn("relative inline-block text-sm", className)}>
