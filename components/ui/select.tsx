@@ -51,42 +51,42 @@ export function Select({
   }
 
   return (
-   <div ref={ref} className={cn("absolute inline-block text-sm", className)}>
-  <button
-    type="button"
-    aria-haspopup="listbox"
-    aria-expanded={open}
-    onClick={() => setOpen((v) => !v)}
-    className="w-full text-left rounded-md border border-input bg-transparent px-3 py-1.5 shadow-xs"
-  >
-    <span className="truncate">{selectedLabel}</span>
-  </button>
+    <div ref={ref} className={cn("relative inline-block text-sm", className)}>
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="w-full text-left rounded-md border border-input bg-transparent px-3 py-1.5 shadow-xs"
+      >
+        <span className="truncate">{selectedLabel}</span>
+      </button>
 
-  {open && (
-    <ul
-      role="listbox"
-      tabIndex={-1}
-      className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border border-border bg-card p-1 shadow-lg"
-    >
-      {options.map((opt) => (
-        <li
-          key={opt.value}
-          role="option"
-          aria-selected={opt.value === value}
-          onClick={() => {
-            onChange(opt.value)
-            setOpen(false)
-          }}
-          className={cn(
-            "cursor-pointer px-2 py-1 rounded-sm",
-            opt.value === value ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "hover:bg-muted"
-          )}
+      {open && (
+        <ul
+          role="listbox"
+          tabIndex={-1}
+          className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border border-border bg-card p-1 shadow-lg"
         >
-          {opt.label}
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
+          {options.map((opt) => (
+            <li
+              key={opt.value}
+              role="option"
+              aria-selected={opt.value === value}
+              onClick={() => {
+                onChange(opt.value)
+                setOpen(false)
+              }}
+              className={cn(
+                "cursor-pointer px-2 py-1 rounded-sm",
+                opt.value === value ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "hover:bg-muted"
+              )}
+            >
+              {opt.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }
