@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { LogOut, Home, Info, File, Users, BookOpen, MapPin } from "lucide-react"
+import { LogOut, Home, Info, File, Users, BookOpen, MapPin, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
 
