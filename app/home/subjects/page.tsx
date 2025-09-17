@@ -168,7 +168,7 @@ export default function SubjectsPage() {
                   />
                 </td>
                 <td className="px-4 py-3">
-                  <div className="w-16">
+                  <div className="w-64">
                     <Select
                       value={r.type}
                       onChange={(v) => updateRow(r.id, "type", v)}
