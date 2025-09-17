@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { LogOut, Home, Info, File } from "lucide-react"
+import { LogOut, Home, Info, File, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
 
@@ -23,6 +23,7 @@ export function AppSidebar() {
   const navItems = [
     { href: "/home", label: "Home", icon: Home },
     { href: "/home/about", label: "About College", icon: Info },
+    { href: "/home/professors", label: "Professors", icon: Users },
     { href: "/home/blank", label: "Blank Page", icon: File },
   ]
 
