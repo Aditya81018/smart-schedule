@@ -8,15 +8,14 @@ type Professor = {
   id: string
   facultyId: string
   name: string
-  expertise: string
 }
 
 const DEFAULT_PROFESSORS: Professor[] = [
-  { id: "p1", facultyId: "F001", name: "Dr. A. Kumar", expertise: "Computer Science" },
-  { id: "p2", facultyId: "F002", name: "Dr. S. Mehta", expertise: "Electrical Engineering" },
-  { id: "p3", facultyId: "F003", name: "Dr. R. Banerjee", expertise: "Mechanical Engineering" },
-  { id: "p4", facultyId: "F004", name: "Dr. L. Sharma", expertise: "Mathematics" },
-  { id: "p5", facultyId: "F005", name: "Dr. P. Iyer", expertise: "Management Studies" },
+  { id: "p1", facultyId: "F001", name: "Dr. A. Kumar" },
+  { id: "p2", facultyId: "F002", name: "Dr. S. Mehta" },
+  { id: "p3", facultyId: "F003", name: "Dr. R. Banerjee" },
+  { id: "p4", facultyId: "F004", name: "Dr. L. Sharma" },
+  { id: "p5", facultyId: "F005", name: "Dr. P. Iyer" },
 ]
 
 export default function ProfessorsPage() {
@@ -35,7 +34,6 @@ export default function ProfessorsPage() {
       id: `p_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       facultyId: "",
       name: "",
-      expertise: "",
     }
     setRows((prev) => [newRow, ...prev])
   }
@@ -45,7 +43,7 @@ export default function ProfessorsPage() {
   }
 
   function saveChanges() {
-    // Persisting is intentionally left out (no localStorage). This will keep changes in-memory only.
+    // in-memory only
     setSaved(rows.map((r) => ({ ...r })))
   }
 
@@ -62,17 +60,15 @@ export default function ProfessorsPage() {
     if (lines.length === 0) return []
     const headers = lines[0].split(",").map((h) => h.trim().toLowerCase())
     const idx = {
-      facultyId: headers.findIndex((h) => ["id"].includes(h)),
-      name: headers.findIndex((h) => ["name"].includes(h)),
-      expertise: headers.findIndex((h) => ["expertise"].includes(h)),
+      facultyId: headers.findIndex((h) => ["facultyid", "faculty id", "faculty_id", "id"].includes(h)),
+      name: headers.findIndex((h) => ["name", "full name"].includes(h)),
     }
     const rowsOut: Professor[] = []
     for (let i = 1; i < lines.length; i++) {
       const cols = lines[i].split(",").map((c) => c.trim())
       const facultyId = cols[idx.facultyId] ?? ""
       const name = cols[idx.name] ?? ""
-      const expertise = cols[idx.expertise].join(", ") ?? ""
-      rowsOut.push({ id: `imp_${Date.now()}_${i}`, facultyId, name, expertise })
+      rowsOut.push({ id: `imp_${Date.now()}_${i}`, facultyId, name })
     }
     return rowsOut
   }
@@ -90,9 +86,8 @@ export default function ProfessorsPage() {
         else if (Array.isArray(parsed?.professors)) arr = parsed.professors
         const mapped: Professor[] = arr.map((item, i) => ({
           id: item.id ?? `imp_json_${Date.now()}_${i}`,
-          facultyId: item.id ?? "",
-          name: item.name ?? "",
-          expertise: item.expertise.join(", ") ?? "",
+          facultyId: item.facultyId ?? item.faculty_id ?? item.id ?? "",
+          name: item.name ?? item.fullName ?? "",
         }))
         setRows(mapped)
       } else if (name.endsWith(".csv")) {
@@ -102,7 +97,6 @@ export default function ProfessorsPage() {
     } catch (err) {
       console.error("Failed to import file", err)
     } finally {
-      // reset input so same file can be chosen again
       if (fileInputRef.current) fileInputRef.current.value = ""
     }
   }
@@ -138,7 +132,6 @@ export default function ProfessorsPage() {
               <th className="px-4 py-3 w-16">S.No</th>
               <th className="px-4 py-3">Faculty ID</th>
               <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Expertise</th>
               <th className="px-4 py-3 w-32">Actions</th>
             </tr>
           </thead>
@@ -163,14 +156,6 @@ export default function ProfessorsPage() {
                   />
                 </td>
                 <td className="px-4 py-3">
-                  <input
-                    value={r.expertise}
-                    onChange={(e) => updateRow(r.id, "expertise", e.target.value)}
-                    className="w-full bg-transparent outline-none"
-                    placeholder="Discipline"
-                  />
-                </td>
-                <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" onClick={() => deleteRow(r.id)} className="p-2">
                       <Trash2 className="h-4 w-4 text-destructive" />
@@ -181,7 +166,7 @@ export default function ProfessorsPage() {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-muted-foreground">
+                <td colSpan={4} className="px-4 py-6 text-center text-muted-foreground">
                   No professors. Use "Add Professor" to create one.
                 </td>
               </tr>
