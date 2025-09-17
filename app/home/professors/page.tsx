@@ -71,7 +71,7 @@ export default function ProfessorsPage() {
       const cols = lines[i].split(",").map((c) => c.trim())
       const facultyId = cols[idx.facultyId] ?? ""
       const name = cols[idx.name] ?? ""
-      const expertise = cols[idx.expertise] ?? ""
+      const expertise = cols[idx.expertise].join(", ") ?? ""
       rowsOut.push({ id: `imp_${Date.now()}_${i}`, facultyId, name, expertise })
     }
     return rowsOut
