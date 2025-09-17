@@ -136,7 +136,7 @@ export default function SubjectsPage() {
         </div>
       </div>
 
-      <div className="rounded-lg border border-border bg-card overflow-x-auto">
+      <div className="rounded-lg border border-border bg-card overflow-auto">
         <table className="min-w-full table-fixed">
           <thead className="text-left">
             <tr>
