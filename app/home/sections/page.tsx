@@ -3,6 +3,7 @@
 import React, { useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Save, X, Upload } from "lucide-react"
+import { ViewSubjectsButton } from "@/components/view-subjects-button"
 
 type Section = {
   id: string
