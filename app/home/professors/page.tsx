@@ -90,9 +90,9 @@ export default function ProfessorsPage() {
         else if (Array.isArray(parsed?.professors)) arr = parsed.professors
         const mapped: Professor[] = arr.map((item, i) => ({
           id: item.id ?? `imp_json_${Date.now()}_${i}`,
-          facultyId: item.facultyId ?? item.faculty_id ?? item.id ?? "",
-          name: item.name ?? item.fullName ?? "",
-          expertise: item.expertise ?? item.department ?? "",
+          facultyId: item.id ?? "",
+          name: item.name ?? "",
+          expertise: item.expertise ?? "",
         }))
         setRows(mapped)
       } else if (name.endsWith(".csv")) {
