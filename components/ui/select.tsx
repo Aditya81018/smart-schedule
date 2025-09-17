@@ -51,7 +51,7 @@ export function Select({
   }
 
   return (
-    <div ref={ref} className={cn("relative inline-block text-sm", className)}>
+    <div ref={ref} className={cn("relative block text-sm", className)}>
       <button
         type="button"
         aria-haspopup="listbox"
