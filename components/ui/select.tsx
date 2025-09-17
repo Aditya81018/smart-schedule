@@ -66,7 +66,7 @@ export function Select({
         <ul
           role="listbox"
           tabIndex={-1}
-          className="!:absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border border-border bg-card p-1 shadow-lg"
+          className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border border-border bg-card p-1 shadow-lg"
         >
           {options.map((opt) => (
             <li
