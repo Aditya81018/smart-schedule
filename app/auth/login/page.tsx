@@ -24,8 +24,17 @@ export default function LoginPage() {
     // Simulate login process
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("isAuthenticated", "true")
+      }
+    } catch {}
+
     console.log("Login attempt:", { email, password })
     setIsLoading(false)
+
+    // Navigate to home after authentication
+    window.location.href = "/home"
   }
 
   return (
