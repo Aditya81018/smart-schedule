@@ -167,17 +167,13 @@ export default function SubjectsPage() {
                   />
                 </td>
                 <td className="px-4 py-3">
-                  <select
-                    value={r.type}
-                    onChange={(e) => updateRow(r.id, "type", e.target.value)}
-                    className="w-full bg-transparent outline-none"
-                  >
-                    {SUBJECT_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="w-full">
+                    <Select
+                      value={r.type}
+                      onChange={(v) => updateRow(r.id, "type", v)}
+                      options={SUBJECT_TYPES.map((t) => ({ value: t, label: t }))}
+                    />
+                  </div>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
