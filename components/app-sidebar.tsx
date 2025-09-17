@@ -25,6 +25,7 @@ export function AppSidebar() {
     { href: "/home/about", label: "About College", icon: Info },
     { href: "/home/professors", label: "Professors", icon: Users },
     { href: "/home/subjects", label: "Subjects", icon: BookOpen },
+    { href: "/home/rooms", label: "Rooms", icon: MapPin },
     { href: "/home/blank", label: "Blank Page", icon: File },
   ]
 
