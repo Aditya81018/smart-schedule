@@ -95,7 +95,7 @@ export default function SectionTimetablePage({ params }: { params: { id: string 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <Link href="/home/timetables" className="flex items-center">
-            <Button variant="outline">← Back</Button>
+            <Button variant="ghost">←</Button>
           </Link>
           <div>
             <h1 className="text-2xl font-semibold">{sectionId} Timetable</h1>
