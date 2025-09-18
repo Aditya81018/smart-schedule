@@ -5,20 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Save, X, Upload } from "lucide-react"
 import { ViewSubjectsButton } from "@/components/view-subjects-button"
 
-type Section = {
-  id: string
-  department: string
-  year: string
-  subjects: string[]
-}
-
-const DEFAULT_SECTIONS: Section[] = [
-  { id: "sec1", department: "CSE", year: "1", subjects: ["SUB001", "SUB002"] },
-  { id: "sec2", department: "CSE", year: "2", subjects: ["SUB003", "SUB004"] },
-  { id: "sec3", department: "ECE", year: "1", subjects: ["SUB001"] },
-  { id: "sec4", department: "ME", year: "3", subjects: ["SUB005"] },
-  { id: "sec5", department: "MBA", year: "1", subjects: [] },
-]
+import type { Section } from "@/lib/sections-data"
+import { DEFAULT_SECTIONS } from "@/lib/sections-data"
 
 export default function SectionsPage() {
   const [saved, setSaved] = useState<Section[]>(() => DEFAULT_SECTIONS.map((s) => ({ ...s, subjects: [...s.subjects] })))

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { LogOut, Home, Info, File, Users, BookOpen, MapPin, User, Layers } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function AppSidebar() {
   const pathname = usePathname()
@@ -28,17 +29,22 @@ export function AppSidebar() {
     { href: "/home/rooms", label: "Rooms", icon: MapPin },
     { href: "/home/students", label: "Students", icon: User },
     { href: "/home/sections", label: "Sections", icon: Layers },
-    { href: "/home/blank", label: "Blank Page", icon: File },
+    { href: "/home/timetables", label: "Timetables", icon: File },
   ]
 
   return (
     <aside className="w-64 shrink-0 border-r border-border bg-[var(--sidebar)] text-[var(--sidebar-foreground)] min-h-screen flex flex-col">
       <div className="px-4 py-4 border-b border-[var(--sidebar-border)]">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--sidebar-primary)] flex items-center justify-center">
-            <span className="text-[var(--sidebar-primary-foreground)] font-bold">S</span>
+        <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[var(--sidebar-primary)] flex items-center justify-center">
+              <span className="text-[var(--sidebar-primary-foreground)] font-bold">S</span>
+            </div>
+            <span className="font-semibold">Smart Schedule</span>
           </div>
-          <span className="font-semibold">Smart Schedule</span>
+          <div>
+            <ModeToggle />
+          </div>
         </div>
       </div>
 
