@@ -28,7 +28,7 @@ export function AppSidebar() {
     { href: "/home/rooms", label: "Rooms", icon: MapPin },
     { href: "/home/students", label: "Students", icon: User },
     { href: "/home/sections", label: "Sections", icon: Layers },
-    { href: "/home/blank", label: "Blank Page", icon: File },
+    { href: "/home/timetables", label: "Timetables", icon: File },
   ]
 
   return (
