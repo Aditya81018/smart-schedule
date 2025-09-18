@@ -35,11 +35,16 @@ export function AppSidebar() {
   return (
     <aside className="w-64 shrink-0 border-r border-border bg-[var(--sidebar)] text-[var(--sidebar-foreground)] min-h-screen flex flex-col">
       <div className="px-4 py-4 border-b border-[var(--sidebar-border)]">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--sidebar-primary)] flex items-center justify-center">
-            <span className="text-[var(--sidebar-primary-foreground)] font-bold">S</span>
+        <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[var(--sidebar-primary)] flex items-center justify-center">
+              <span className="text-[var(--sidebar-primary-foreground)] font-bold">S</span>
+            </div>
+            <span className="font-semibold">Smart Schedule</span>
           </div>
-          <span className="font-semibold">Smart Schedule</span>
+          <div>
+            <ModeToggle />
+          </div>
         </div>
       </div>
 
