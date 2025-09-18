@@ -22,6 +22,21 @@ export function TimetableGrid({
   highlighted?: { day: string; period: string } | null
   onCellClick?: (day: string, period: string) => void
 }) {
+  const cols = periods.length + 1
+  const colsMap: Record<number, string> = {
+    2: "grid-cols-2",
+    3: "grid-cols-3",
+    4: "grid-cols-4",
+    5: "grid-cols-5",
+    6: "grid-cols-6",
+    7: "grid-cols-7",
+    8: "grid-cols-8",
+    9: "grid-cols-9",
+    10: "grid-cols-10",
+    11: "grid-cols-11",
+    12: "grid-cols-12",
+  }
+  const colClass = colsMap[cols] || "grid-cols-12"
   return (
     <div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
       <div className="flex items-center justify-between mb-4">
@@ -29,7 +44,7 @@ export function TimetableGrid({
       </div>
 
       <div className="w-full">
-        <div className={`grid grid-cols-${periods.length + 1} gap-2 w-full`}>
+        <div className={`grid ${colClass} gap-2 w-full`}>
           <div className="p-3 text-sm font-medium text-muted-foreground"></div>
           {periods.map((p) => (
             <div key={p} className="p-3 text-sm font-medium text-center text-muted-foreground bg-muted/30 rounded">
