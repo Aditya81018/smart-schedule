@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { LogOut, Home, Info, File, Users, BookOpen, MapPin, User, Layers } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useCallback } from "react"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function AppSidebar() {
   const pathname = usePathname()
