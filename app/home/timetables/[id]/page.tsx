@@ -34,60 +34,128 @@ export default function SectionTimetablePage({ params }: { params: { id: string 
   })(), [schedules, sectionId])
 
   async function exportDomAsImage(format: "png" | "jpeg" | "pdf") {
-    const node = exportRef.current
-    if (!node) return
+    // Render the timetable into a canvas directly to avoid CSS/foreignObject issues
+    const cellPadding = 12
+    const firstColW = 140
+    const headerH = 56
+    const rowH = 110
+    const cols = periods.length
+    const width = Math.max(900, firstColW + cols * 140) // flexible width
+    const height = headerH + days.length * rowH
 
-    const rect = node.getBoundingClientRect()
-    const width = Math.ceil(rect.width)
-    const height = Math.ceil(rect.height)
+    const canvas = document.createElement("canvas")
+    canvas.width = Math.ceil(width * devicePixelRatio)
+    canvas.height = Math.ceil(height * devicePixelRatio)
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    ctx.scale(devicePixelRatio, devicePixelRatio)
 
-    const cloned = node.cloneNode(true) as HTMLElement
-    cloned.querySelectorAll("button").forEach((b) => b.remove())
+    // background
+    ctx.fillStyle = "#ffffff"
+    ctx.fillRect(0, 0, width, height)
 
-    const serializer = new XMLSerializer()
-    const markup = serializer.serializeToString(cloned)
+    const colW = Math.floor((width - firstColW) / cols)
 
-    const svg = `<?xml version="1.0" encoding="utf-8"?>\n<svg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}'><foreignObject width='100%' height='100%'>${markup}</foreignObject></svg>`
-    const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
+    // header background
+    ctx.fillStyle = "#f8fafc"
+    ctx.fillRect(0, 0, width, headerH)
 
-    const img = new Image()
-    img.width = width
-    img.height = height
-    img.onload = () => {
-      const canvas = document.createElement("canvas")
-      canvas.width = width * devicePixelRatio
-      canvas.height = height * devicePixelRatio
-      const ctx = canvas.getContext("2d")
-      if (!ctx) return
-      ctx.scale(devicePixelRatio, devicePixelRatio)
-      ctx.fillStyle = getComputedStyle(document.body).background || "#fff"
-      ctx.fillRect(0, 0, width, height)
-      ctx.drawImage(img, 0, 0)
+    // draw period headers
+    ctx.fillStyle = "#94a3b8" // muted
+    ctx.font = "600 14px system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial"
+    for (let i = 0; i < cols; i++) {
+      const x = firstColW + i * colW
+      ctx.fillStyle = "#f1f5f9"
+      ctx.fillRect(x, 6, colW - 8, headerH - 12)
+      ctx.fillStyle = "#667085"
+      const label = periods[i]
+      const textX = x + (colW - 8) / 2
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(label, textX, headerH / 2)
+    }
 
-      if (format === "pdf") {
-        const dataUrl = canvas.toDataURL("image/png")
-        const w = window.open("")
-        if (!w) return
-        w.document.write(`<img src="${dataUrl}" style="max-width:100%"/>`)
-        w.document.close()
-        w.focus()
-        setTimeout(() => w.print(), 500)
-        return
+    // draw rows
+    ctx.textAlign = "left"
+    for (let r = 0; r < days.length; r++) {
+      const y = headerH + r * rowH
+      // day cell
+      ctx.fillStyle = "#f1f5f9"
+      ctx.fillRect(0, y, firstColW - 8, rowH - 8)
+
+      ctx.fillStyle = "#0f172a"
+      ctx.font = "600 16px system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial"
+      ctx.fillText(days[r], 12, y + 28)
+
+      // draw each period cell
+      for (let c = 0; c < cols; c++) {
+        const x = firstColW + c * colW
+        const period = periods[c]
+        const day = days[r]
+        const info = schedule[day]?.[period]
+        const isBreak = period.toLowerCase() === "break"
+        const isHighlighted = highlighted && highlighted.day === day && highlighted.period === period
+
+        // background
+        if (isBreak) ctx.fillStyle = "#e2e8f0"
+        else if (!info) ctx.fillStyle = "#f8fafc"
+        else ctx.fillStyle = "#ffffff"
+        ctx.fillRect(x + 6, y + 6, colW - 12, rowH - 12)
+
+        // border
+        ctx.strokeStyle = isHighlighted ? "#06b6d4" : "#e6edf3"
+        ctx.lineWidth = isHighlighted ? 3 : 1
+        ctx.strokeRect(x + 6 + (ctx.lineWidth/2), y + 6 + (ctx.lineWidth/2), colW - 12 - ctx.lineWidth, rowH - 12 - ctx.lineWidth)
+
+        // text
+        const paddingLeft = x + 16
+        const textY = y + 26
+        if (isBreak) {
+          ctx.fillStyle = "#475569"
+          ctx.font = "600 14px system-ui, sans-serif"
+          ctx.textAlign = "center"
+          ctx.fillText("Break", x + 6 + (colW - 12) / 2, y + rowH / 2)
+          ctx.textAlign = "left"
+        } else if (!info) {
+          ctx.fillStyle = "#475569"
+          ctx.font = "500 13px system-ui, sans-serif"
+          ctx.fillText("Free Period", paddingLeft, textY)
+        } else {
+          ctx.fillStyle = "#0f172a"
+          ctx.font = "600 14px system-ui, sans-serif"
+          // subject
+          const subject = String(info.subject)
+          ctx.fillText(subject, paddingLeft, textY)
+          // professor
+          ctx.fillStyle = "#64748b"
+          ctx.font = "400 12px system-ui, sans-serif"
+          ctx.fillText(String(info.professor), paddingLeft, textY + 20)
+          // room
+          ctx.fillText(String(info.room), paddingLeft, textY + 38)
+        }
       }
+    }
 
-      const mime = format === "jpeg" ? "image/jpeg" : "image/png"
-      const dataUrl = canvas.toDataURL(mime, 0.95)
-      const a = document.createElement("a")
-      a.href = dataUrl
-      a.download = `${sectionId}-timetable.${format === "jpeg" ? "jpg" : "png"}`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
+    // export
+    if (format === "pdf") {
+      const dataUrl = canvas.toDataURL("image/png")
+      const w = window.open("")
+      if (!w) return
+      w.document.write(`<img src="${dataUrl}" style="max-width:100%"/>`)
+      w.document.close()
+      w.focus()
+      setTimeout(() => w.print(), 500)
+      return
     }
-    img.onerror = (e) => {
-      console.error("Failed to load svg image", e)
-    }
-    img.src = url
+
+    const mime = format === "jpeg" ? "image/jpeg" : "image/png"
+    const dataUrl = canvas.toDataURL(mime, 0.95)
+    const a = document.createElement("a")
+    a.href = dataUrl
+    a.download = `${sectionId}-timetable.${format === "jpeg" ? "jpg" : "png"}`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
   }
 
   return (
